@@ -1,0 +1,158 @@
+<!doctype html>
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Bounce Ball</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	<style type="text/css">
+    body{
+      background-image: url('bgimg.png');
+    }
+		#myPlateform{
+			width: 300px;
+			height: 30px;
+			background-color: yellow;
+			position: absolute;
+      border-radius: 40px;
+		}
+		#myBall{
+      position: absolute;
+			width: 100px;
+			height: 100px;
+		}
+    .life{
+      float: left;
+      margin-left: 523px !important;
+      font-size: 500px;
+      height: 10vh;
+      background-color: red;
+    }
+    .row{
+      width : 300px !important;
+    }
+	</style>
+</head>
+<body onload="trajectory(),mylife()" onkeydown="movePlateform(event)">
+	<div id="myPlateform"></div>
+  <div class="row" id="life">
+    <div class="col" >
+      <img id="life1">
+    </div>
+    <div class="col" >
+      <img id="life2">
+    </div>
+    <div class="col" >
+      <img id="life3">
+    </div>
+    <div class="col" >
+      <img id="life4">
+    </div>
+    <div class="col" >
+      <img id="life5">
+    </div>
+    <div class = "row" >
+      <div class="col" style="font-size: 50px; font-weight: 300; color: white;">
+        score: 
+      </div>
+      <div class="col" id = "scoreid" style="font-size: 50px; font-weight: 300; color: white;" >
+        0 
+      </div>
+    </div>
+  </div>
+	<img src="ballimg.jpg" id="myBall">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<script type="text/javascript">
+		ptf = document.getElementById('myPlateform');
+    myImg = document.getElementById('myImg');
+		ptf.style.left=(screen.availWidth-300)/2+"px";
+		ptf.style.top=(screen.availHeight-140)+"px";
+
+		function movePlateform(e) {
+      if (e.key == "ArrowRight") {
+        if(ptf.getBoundingClientRect().x < screen.availWidth-305){
+          ptf.style.left=parseInt(ptf.style.left)+20+"px";
+        }else{
+          ptf.style.left=parseInt(screen.availWidth-305)+"px";
+        }
+      }
+      else if (e.key =="ArrowLeft") {
+        if(ptf.getBoundingClientRect().x >= 0){
+          ptf.style.left=parseInt(ptf.style.left)-20+"px";
+        }
+      }
+		}
+    var x=0;
+    var y=0;
+    var m=1;
+    //count = 0;
+    function trajectory(){
+      setInterval(moveball);
+    }
+    ychange = false;
+    xchange = false;
+    var life = 5;
+    function mylife(){
+      str = "";
+      let index=0;
+      for (index = 1; index <= life; index++) {
+        document.getElementById("life"+index).src = "heartnew.png";
+      }
+      for(i = index; i <= 5; i++) {
+        document.getElementById("life"+i).style.display="none";
+      }
+      if(life == 0){
+        Swal.fire('Game Over!')
+        return;
+      }
+      
+    }
+    count = 0;
+    function moveball(){
+      if(y < 0){
+        ychange = !ychange;
+      }
+      if(y+50 > screen.availHeight-200){
+        if(x > ptf.getBoundingClientRect().x && x < ptf.getBoundingClientRect().x+300){
+          playSound();
+          ychange = !ychange;
+          r = parseInt(Math.random()*255);
+          g = parseInt(Math.random()*255);
+          b = parseInt(Math.random()*255);
+          ptf.style.backgroundColor="rgb("+r+","+g+","+b+")"
+          count++;
+          document.getElementById("scoreid").innerHTML = count;
+        }else{
+          x = 0;
+          y = 0;
+          life--;
+          mylife();
+        }
+      }
+      if(x > screen.availWidth-100 || x < 0){
+        xchange = !xchange;
+      }
+      var ball = document.getElementById('myBall');
+      if(!xchange){
+        x += 1;
+      }else{
+        x -=1;
+      }
+      c=0;
+      if(!ychange){
+        y +=1;
+      }else{
+        y -=1;
+      }
+      ball.style.left=x+"px";
+      ball.style.top=y+"px";
+    }
+    function playSound() {
+      var audio = new Audio("ballhit.wav");
+      audio.play();
+    }
+	</script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+</html>
